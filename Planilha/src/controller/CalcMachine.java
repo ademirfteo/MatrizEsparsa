@@ -30,13 +30,13 @@ public class CalcMachine {
 
 			@Override
 			public void setFormula(String cell, String formula) {
-			//	if (!formula.isEmpty()) {
+				if (!formula.isEmpty()) {
 					matriz.CreateCel(cell, formula);
-			//	}
-				if (cell.equals("A1")) {
-					matriz.ShowMatriz();
+				} else {
+					matriz.ErasesValue(cell);
 				}
-			}			
+				//matriz.ShowMatriz();
+			}
 		};
 		
 		(new Spreadsheet(m)).start();

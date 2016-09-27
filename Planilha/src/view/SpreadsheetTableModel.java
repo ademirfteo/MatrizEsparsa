@@ -19,7 +19,7 @@ public class SpreadsheetTableModel extends AbstractTableModel {
 
 	@Override
 	public int getColumnCount() {
-		return 40;
+		return 27;
 	}
 
 	private String translateIndexToColumnName(int index) {

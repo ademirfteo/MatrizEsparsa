@@ -1,5 +1,8 @@
 package controller;
 
+import java.util.Random;
+import java.util.Scanner;
+
 public class Matriz {
 	
 	private Lista<Lista> coluna;
@@ -11,11 +14,13 @@ public class Matriz {
 	private boolean contemCel;
 	private String col;
 	private String cel;
-	private String expressao;
+	private String exprInfixa;
+	private String exprPosfixa;
 	private Double resultado;
 	
 	public Matriz() {
-		coluna = new Lista<>("matriz");		
+		coluna = new Lista<>("matriz");
+		InsertDados();
 	}
 	
 	public void CreateCel(String nome, String formula) {
@@ -34,6 +39,21 @@ public class Matriz {
 				AlterCel(celula, nome, formula);			
 			}
 		}	
+	}
+	
+	public void ErasesValue(String nome) {		
+		for (Lista i : coluna) {
+			col = i.toString();
+			if (col.equals(OnlyLetter(nome))) {
+				celula = i;
+				for (Objeto j : celula) {
+					if (j.getNome().equals(nome)) {
+						j.setFormula("");
+						break;
+					}
+				}
+			}
+		}		
 	}
 	
 	public void Contem(String nome) {
@@ -159,31 +179,40 @@ public class Matriz {
 		return formula;
 	}
 	
-	public String ShowResult(String formula) {		
-		try {
-			Expressao c = new Expressao();
-			try {
-				expressao = c.Converte(formula);
-				System.out.println(expressao);
-			} catch (IllegalArgumentException e) {
-				expressao = "";
-				throw new FormulaException();				
-			}
-			
-			try {
-				resultado = c.Calcula(expressao);
-				System.out.println(resultado);
-			} catch (IllegalArgumentException e) {
-				resultado = 0.0;
-				throw new ResultException();
-			}			
-		} finally {
-			if (resultado == null) {
-				return "";
-			} else {
-				return String.valueOf(resultado);
-			}			
+	public String ShowResult(String formula) {
+		Expressao c = new Expressao();
+		
+		exprInfixa = CalcReference(formula);
+		
+		exprPosfixa = c.Converte(exprInfixa);
+		
+		resultado = c.Calcula(exprPosfixa);
+				
+		if (resultado == null) {
+			return "";
+		} else {
+			return String.valueOf(resultado);
 		}
+	}
+	
+	public String CalcReference(String formula) {
+
+		String exprInfixa = "";
+		String r = "";
+		Expressao e = new Expressao();
+		String[] f = formula.split(" ");
+		
+		for(String token : f) {
+			if (!e.Operador(token) && !OnlyLetter(token).equals("")) {
+								
+				r = e.Converte(ShowFormula(token));
+				r = String.valueOf(e.Calcula(r));
+				exprInfixa = exprInfixa+" "+r;				
+			} else {
+				exprInfixa = exprInfixa+" "+token;
+			}			
+		}		
+		return exprInfixa;
 	}
 	
 	public void ShowMatriz() {
@@ -194,6 +223,24 @@ public class Matriz {
 				System.out.println("Célula: "+j.getNome()+" | Valor: "+j.getFormula());
 			}
 		}	
+	}
+	
+	public void InsertDados() {
+		
+		int num = 0;		
+		int index = -1;
+		int valor = 0;
+		String letras = "ABCDEFGHIJKLMNOPQRSTUVYWXZ";
+		String referencia = "";
+		Random random = new Random();
+		
+		for( int i = 0; i < 500; i++ ) {
+		   num = random.nextInt(100);		   
+		   index = random.nextInt(letras.length());
+		   referencia = letras.substring(index,index+1) + num;
+		   valor = random.nextInt(100);
+		   CreateCel(referencia, Integer.toString(valor));
+		}
 	}
 	
 	public String OnlyLetter(String nome) {

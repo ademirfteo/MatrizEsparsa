@@ -5,63 +5,57 @@ import java.util.Scanner;
 public class Expressao {
 	
 	private String exprPosFixa = "";
-	private char token;
-	private char topo;
+	private String topo;
 	
 	public Expressao() {}
 	
-	private int Priority(Character sinal) {
+	private int Priority(String sinal) {
 		
 		switch(sinal) {
-			case '+':
-			case '-':	
+			case "+":
+			case "-":	
 				return 1;
-			case '*':
-			case '/':
+			case "*":
+			case "/":
 				return 2;
-			case '^':
+			case "^":
 				return 3;
 			default:
 				return 0;
 		}
 	}
 	
-	private boolean Operador (char op)  {
-		return(op == '(' || op == ')' || op == '+' || op == '-' || op == '*' || op == '/');
+	public boolean Operador (String op)  {
+		return(op.equals("(") || op.equals(")") || op.equals("+") || op.equals("-") || op.equals("*") || op.equals("/"));
 	}
 	
 	public String Converte(String exprInfixa) {
 		
-		Pilha<Character> pilha = new Pilha<>();
-		
-		Scanner scanner = new Scanner(exprInfixa);
-		
-		while(scanner.hasNext()) {
-			
-			token = scanner.next().charAt(0);
+		Pilha<String> pilha = new Pilha<>();
+
+		String[] formula = exprInfixa.split(" ");
+		for(String token : formula) {
 			
 			if (!Operador(token)) {
-				this.exprPosFixa = this.exprPosFixa +" "+token;
+				this.exprPosFixa = this.exprPosFixa+" "+token;
 				
 			} else {
-				
-				if (token == ')') {
-					while (pilha.Peek() != '(') {
-						this.exprPosFixa = this.exprPosFixa +" " +pilha.Pop();
+				if (token.equals(")")) {
+					while (!pilha.Peek().equals("(")) {
+						this.exprPosFixa = this.exprPosFixa+" "+pilha.Pop();
 					}				
 				}
 				
-				if (pilha.IsEmpty() || pilha.Peek() == '(' || Priority(token) > Priority(pilha.Peek())) {
+				if (pilha.IsEmpty() || pilha.Peek().equals("(") || Priority(token) > Priority(pilha.Peek())) {
 					pilha.Push(token);
 				}
 			}
 		}
 
-		while (!pilha.IsEmpty() ) {
-			
+		while (!pilha.IsEmpty() ) {			
 			topo = pilha.Pop();
-			if (topo != '(' && topo != ')') {
-				this.exprPosFixa = this.exprPosFixa +" " +topo;
+			if (!topo.equals("(") && !topo.equals(")")) {
+				this.exprPosFixa = this.exprPosFixa+" " +topo;
 			}
 		}
 		
@@ -71,20 +65,17 @@ public class Expressao {
 	public Double Calcula(String exprPosFixa) {
 		
 		Pilha<Double> pilha = new Pilha<>();
-		Scanner scanner = new Scanner(exprPosFixa);
 		
-		while(scanner.hasNext()){
+		String[] formula = exprPosFixa.split(" ");
+		
+		for(String token : formula) {
 			
-			if (scanner.hasNextDouble()) {
-				pilha.Push(scanner.nextDouble());
-			}
-			
-			if (scanner.hasNext("[+-/*]")) {
+			if (Operador(token)) {
 				
 				Double	rhs = pilha.Pop();
 				Double	lhs = pilha.Pop();
 				
-				switch(scanner.next()){
+				switch(token){
 					case "+":
 						pilha.Push(lhs + rhs);
 						break;
@@ -98,6 +89,9 @@ public class Expressao {
 						pilha.Push(lhs * rhs);
 						break;
 				}
+			}
+			else if (!Operador(token) && !token.equals("")) {				
+				pilha.Push(Double.parseDouble(token));
 			}
 		}		
 		return pilha.Pop();

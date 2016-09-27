@@ -1,6 +1,9 @@
 package view;
+
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
@@ -18,13 +21,23 @@ import javax.swing.table.TableColumnModel;
 import model.SpreadsheetModel;
 
 public class Spreadsheet extends JFrame {
+	
 	private static final long serialVersionUID = 6096182290678671725L;
+	private int altura;
+	private int largura;	
+	
+	Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
 
 	public Spreadsheet(SpreadsheetModel spreadsheet) {
-		super("Spreadsheet");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		super("Planilha");
+		altura = (int) Math.round(tela.height*0.9);
+		largura = (int) Math.round(tela.width*0.9);
+		this.setSize(largura,altura);		
+        this.setLocation((tela.width-this.getSize().width)/2,(tela.height-this.getSize().height)/2);       
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setResizable(true);
 		
-		JTable table = new JTable();
+		JTable table = new JTable();		
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		JScrollPane scroll = new JScrollPane(table);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -40,7 +53,7 @@ public class Spreadsheet extends JFrame {
 		table.setDefaultRenderer(Object.class, rightRenderer);
         table.setDefaultEditor(Object.class, editor);
         TableColumnModel cols = table.getColumnModel();
-		cols.getColumn(0).setPreferredWidth(50);
+		cols.getColumn(0).setPreferredWidth(40);
 		cols.getColumn(0).setCellRenderer(new RowNumberRenderer());
 		
 		add(scroll);
@@ -79,7 +92,7 @@ public class Spreadsheet extends JFrame {
         	getTableCellRendererComponent(
         			JTable table, Object value,
         			boolean isSelected, boolean hasFocus,
-        			int row, int column) 
+        			int row, int column)
         {
             if (table != null) {
                 JTableHeader header = table.getTableHeader();

@@ -5,28 +5,30 @@ public class Principal {
 
 	public static void main(String[] args) {		
 				
-		/* MATRIZ */
+		/* MATRIZ 
 		
 		String celula;
 		Matriz m = new Matriz();
 		
-		celula = "A8";
-		m.CreateCel(celula, "0");
+		m.InsertDados();
 		
-		celula = "A7";
-		m.CreateCel(celula, "0");
+	//	celula = "A8";
+	//	m.CreateCel(celula, "0");
 		
-		celula = "A1";
-		m.CreateCel(celula, "0");
+	//	celula = "A7";
+	//	m.CreateCel(celula, "0");
 		
-		celula = "A1";
-		m.CreateCel(celula, "1");
+	//	celula = "A1";
+	//	m.CreateCel(celula, "0");
 		
-		celula = "A8";
-		m.CreateCel(celula, "8");
+	//	celula = "A1";
+	//	m.CreateCel(celula, "1");
+		
+	//	celula = "A8";
+	//	m.CreateCel(celula, "8");
 		
 		m.ShowMatriz();
-		
+		*/
 		
 		/*
 		if (m.CelExists(celula) == true) {
@@ -130,17 +132,32 @@ public class Principal {
 		
 		*/
 		
-		/* PILHA
-
-		String expressao;
-		Double resultado;
-		Expressao c = new Expressao();
+		/* PILHA 
 		
-		expressao = c.Converte("( 1 + 2 ) * 3");
-		System.out.println(expressao);
+		Matriz m = new Matriz();
+		String celula = "M12";
+		m.CreateCel(celula, "( 2 * 4 ) + 6");
+		
+	//	m.ErasesValue("M12");
+		
+		String formula = m.ShowFormula("M12");
+		System.out.println(formula);
+		
+	//	String formula = "( M12 + 16 ) * 3";
+		
+	//	formula = m.ShowResult(formula);
+	//	System.out.println(formula);
+		
+		//formula = m.CalcReference(formula);	
+		//System.out.println(formula);
+		
+		//Expressao c = new Expressao();
+		//formula = c.Converte(formula);
+		//System.out.println(formula);
+		
+		//Double resultado = c.Calcula(formula);
+		//System.out.println(resultado);
 
-		resultado = c.Calcula(expressao);
-		System.out.println(resultado);
 		*/
 	}
 }
